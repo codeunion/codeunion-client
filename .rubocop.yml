@@ -1,0 +1,11 @@
+AllCops:
+  Exclude:
+    - '*.gemspec'
+
+Style/Documentation:
+  Exclude:
+    - 'lib/codeunion/version.rb'
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes

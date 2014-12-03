@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = CodeUnion::VERSION
   spec.authors       = ["Jesse Farmer"]
   spec.email         = ["jesse@codeunion.io"]
-  spec.summary       = %q{The CodeUnion Command-Line Tool}
-  spec.description   = %q{The CodeUnion command-line tool helps students work through CodeUnion's curriculum.}
+  spec.summary       = "The CodeUnion Command-Line Tool"
+  spec.description   = "The CodeUnion command-line tool helps students work through CodeUnion's curriculum."
   spec.homepage      = "http://github.com/codeunion/codeunion-client"
   spec.license       = "MIT"
 
@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "rubocop", "~> 0.27"
 
   spec.add_dependency "ptools", "~> 1.2"
 end

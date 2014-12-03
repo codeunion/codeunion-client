@@ -1,31 +1,34 @@
 require "codeunion"
 require "ptools"
 
-class CodeUnion::Command
-  class CommandNotFound < StandardError;end
+module CodeUnion
+  # This class serves as a simple wrapper around subcommands
+  class Command
+    class CommandNotFound < StandardError; end
 
-  def initialize(command, *args)
-    @command = command
-    @args = args
-  end
-
-  def exist?
-    File.which(executable_name)
-  end
-
-  def exec!
-    if exist?
-      exec(executable_name, *args)
-    else
-      fail CommandNotFound, "Unknown command `#{@command}`."
+    def initialize(command, *args)
+      @command = command
+      @args = args
     end
-  end
 
-  private
+    def exist?
+      File.which(executable_name)
+    end
 
-  attr_reader :command, :args
+    def exec!
+      if exist?
+        exec(executable_name, *args)
+      else
+        fail CommandNotFound, "Unknown command `#{@command}`."
+      end
+    end
 
-  def executable_name
-    "codeunion-#{command}"
+    private
+
+    attr_reader :command, :args
+
+    def executable_name
+      "codeunion-#{command}"
+    end
   end
 end
