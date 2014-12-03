@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+# encoding: UTF-8
+
+# Resolve the pathname for this executable
+require "pathname"
+bin_file = Pathname.new(__FILE__).realpath
+
+# Add the gem's "lib" directory to library path
+$LOAD_PATH.unshift File.expand_path("../../lib", bin_file)
+
+require "codeunion/cli"
+CodeUnion::CLI.start(*ARGV)
