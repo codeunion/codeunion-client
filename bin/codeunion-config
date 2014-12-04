@@ -8,6 +8,6 @@ bin_file = Pathname.new(__FILE__).realpath
 # Add the gem's "lib" directory to library path
 $LOAD_PATH.unshift File.expand_path("../../lib", bin_file)
 
-require "codeunion/command/main"
+require "codeunion/command/config"
 
-CodeUnion::Command::Main.new(*ARGV).run
+CodeUnion::Command::Config.new(*ARGV).run

@@ -6,6 +6,10 @@ Style/Documentation:
   Exclude:
     - 'lib/codeunion/version.rb'
 
+Style/FileName:
+  Exclude:
+    - 'bin/*'
+
 Style/StringLiterals:
   Enabled: true
   EnforcedStyle: double_quotes
