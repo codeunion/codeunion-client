@@ -10,4 +10,9 @@ $LOAD_PATH.unshift File.expand_path("../../lib", bin_file)
 
 require "codeunion/command/main"
 
-CodeUnion::Command::Main.new(*ARGV).run
+options = {
+  :command_name => ARGV.first,
+  :command_args => ARGV.drop(1)
+}
+
+CodeUnion::Command::Main.new(options).run

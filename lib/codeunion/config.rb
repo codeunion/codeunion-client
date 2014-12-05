@@ -13,6 +13,11 @@ module CodeUnion
       self
     end
 
+    def unset(dotted_key)
+      @config = unset_dotted(@config, dotted_key)
+      self
+    end
+
     def get(dotted_key)
       get_dotted(@config, dotted_key)
     end
@@ -31,6 +36,16 @@ module CodeUnion
       key, sub_key = extract_subkey(dotted_key)
 
       config.merge(key => set_dotted(config[key], sub_key, value))
+    end
+
+    def unset_dotted(config, dotted_key)
+      key, sub_key = extract_subkey(dotted_key)
+      if sub_key
+        unset_dotted(config[key], sub_key)
+        config.delete(key) if config[key].empty?
+      else
+        config.delete(key)
+      end
     end
 
     def get_dotted(config, dotted_key)

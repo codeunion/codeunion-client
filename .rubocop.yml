@@ -10,6 +10,10 @@ Style/FileName:
   Exclude:
     - 'bin/*'
 
+Style/HashSyntax:
+  Enabled: true
+  EnforcedStyle: hash_rockets
+
 Style/StringLiterals:
   Enabled: true
   EnforcedStyle: double_quotes
