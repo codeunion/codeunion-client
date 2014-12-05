@@ -9,5 +9,39 @@ bin_file = Pathname.new(__FILE__).realpath
 $LOAD_PATH.unshift File.expand_path("../../lib", bin_file)
 
 require "codeunion/command/config"
+require "optparse"
 
-CodeUnion::Command::Config.new(*ARGV).run
+options = {}
+parser = OptionParser.new do |opts|
+  opts.instance_exec do
+    self.banner = "Usage: codeunion config [options]"
+
+    separator ""
+    separator "Options:"
+    on("--get   NAME", "Display config variable NAME") do |name|
+      options[:get] = name
+    end
+
+    on("--set   NAME VALUE", "Set config variable NAME to VALUE") do |name|
+      options[:set] = [name, default_argv.shift]
+    end
+
+    on("--unset NAME", "Unset config variable NAME") do |name|
+      options[:unset] = name
+    end
+
+    on_tail("-h", "--help", "Print this help message") do
+      puts self
+      exit
+    end
+  end
+end
+
+if ARGV.empty?
+  puts parser
+  exit
+else
+  parser.parse!(ARGV)
+end
+
+CodeUnion::Command::Config.new(options).run

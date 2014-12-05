@@ -20,11 +20,11 @@ module CodeUnion
       private
 
       def command_name
-        args.first
+        options[:command_name]
       end
 
       def command_args
-        args.drop(1)
+        options[:command_args]
       end
 
       def executable_name

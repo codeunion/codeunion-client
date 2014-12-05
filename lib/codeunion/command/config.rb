@@ -10,19 +10,24 @@ module CodeUnion
       CONFIG_FILE = File.join(CONFIG_DIR, "config")
 
       def run
-        ensure_config_exists!
-
-        case args.length
-        when 1
-          puts config.get(*args)
-        when 2
-          config.set(*args)
+        edit_config do
+          if options[:get]
+            config.get(options[:get])
+          elsif options[:set]
+            config.set(options[:set])
+          elsif options[:unset]
+            config.unset(options[:unset])
+          end
         end
-
-        save_config!
       end
 
       private
+
+      def edit_config
+        ensure_config_exists!
+        yield
+        save_config!
+      end
 
       def config
         @config ||= CodeUnion::Config.new(YAML.load_file(CONFIG_FILE))
