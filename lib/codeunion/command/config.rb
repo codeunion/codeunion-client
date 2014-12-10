@@ -12,13 +12,14 @@ module CodeUnion
       def run
         edit_config do
           if options[:get]
-            config.get(options[:get])
+            return config.get(options[:get])
           elsif options[:set]
             config.set(*options[:set])
           elsif options[:unset]
             config.unset(options[:unset])
           end
         end
+        return nil
       end
 
       private
