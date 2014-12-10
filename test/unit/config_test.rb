@@ -23,7 +23,7 @@ class ConfigTest < MiniTest::Test
 
   def test_writing_a_config_file
 
-    File.delete(fixture("mutable_config"))
+    File.delete(fixture("mutable_config")) if File.exist?(fixture("mutable_config"))
     config = CodeUnion::Config.load(fixture("mutable_config"))
     value = SecureRandom::hex(6)
     key = SecureRandom::hex(6)
