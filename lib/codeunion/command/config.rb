@@ -14,7 +14,7 @@ module CodeUnion
           if options[:get]
             config.get(options[:get])
           elsif options[:set]
-            config.set(options[:set])
+            config.set(*options[:set])
           elsif options[:unset]
             config.unset(options[:unset])
           end
