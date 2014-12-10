@@ -3,8 +3,15 @@ require "yaml"
 module CodeUnion
   # A class to manage CodeUnion configuration data
   class Config
-    def initialize(config_data)
-      @config = Hash(config_data.dup)
+    DEFAULT_CONFIG_FILE = File.join(Dir.home, ".codeunion", "config")
+
+    def self.load(config_file_path=DEFAULT_CONFIG_FILE)
+        CodeUnion::Config.new(FileAdapter.new(config_file_path))
+    end
+
+    def initialize(config_file)
+      @file = config_file
+      @config = Hash(config_file)
       @config.default_proc = proc { |h, k| h[k] = {} }
     end
 
@@ -27,6 +34,10 @@ module CodeUnion
     end
 
     alias_method :to_h, :to_hash
+
+    def write
+      @file.write(to_hash)
+    end
 
     private
 
@@ -60,6 +71,42 @@ module CodeUnion
 
     def extract_subkey(dotted_key)
       dotted_key.split(".", 2)
+    end
+
+    class FileAdapter
+      attr_reader :file_path
+
+      def initialize(file_path)
+        @file_path = file_path
+      end
+
+
+      def write(data)
+        ensure_exists!
+        write_fearlessly(data)
+      end
+
+      def to_hash
+        ensure_exists!
+        YAML.load_file(file_path).dup
+      end
+
+      alias_method :to_h, :to_hash
+
+      private
+
+
+      def write_fearlessly(data)
+        File.open(file_path, "w") do |f|
+          f.write YAML.dump(Hash(data))
+        end
+      end
+
+      def ensure_exists!
+        config_dir = File.dirname(file_path)
+        FileUtils.mkdir(config_dir) unless Dir.exist?(config_dir)
+        write_fearlessly({}) unless File.exist?(file_path)
+      end
     end
   end
 end
