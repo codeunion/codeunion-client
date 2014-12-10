@@ -80,3 +80,5 @@ Desktop.ini
 
 # KDE directory preferences
 .directory
+
+test/unit/fixtures/mutable_config

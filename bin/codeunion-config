@@ -44,4 +44,5 @@ else
   parser.parse!(ARGV)
 end
 
-CodeUnion::Command::Config.new(options).run
+result = CodeUnion::Command::Config.new(options).run
+puts result if result
