@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+# encoding: UTF-8
+
+# Resolve the pathname for this executable
+require "pathname"
+bin_file = Pathname.new(__FILE__).realpath
+
+# Add the gem's "lib" directory to library path
+$LOAD_PATH.unshift File.expand_path("../../lib", bin_file)
+
+require "codeunion/command/search"
+require "optparse"
+
+options = {}
+parser = OptionParser.new do |opts|
+  opts.instance_exec do
+    self.banner = "Usage: codeunion search [options] <terms>"
+
+    separator ""
+    separator "Options:"
+    on("-c", "--category   CATEGORY", "Display config variable NAME") do |name|
+      options[:category] = name
+    end
+
+    on_tail("-h", "--help", "Print this help message") do
+      puts self
+      exit
+    end
+  end
+end
+
+if ARGV.empty?
+  puts parser
+  exit
+else
+  parser.parse!(ARGV)
+end
+
+options[:query] = ARGV
+
+result = CodeUnion::Command::Search.new(options).run
+puts result if result
