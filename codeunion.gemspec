@@ -23,4 +23,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop", "~> 0.27"
 
   spec.add_dependency "ptools", "~> 1.2"
+  spec.add_dependency "faraday", "~> 0.9"
+  spec.add_dependency "faraday_middleware", "~> 0.9"
+  spec.add_dependency "addressable", "~> 2.3"
+  spec.add_dependency "multi_json", "~> 1.10"
+  spec.add_dependency "rainbow", "~> 2.0"
 end
