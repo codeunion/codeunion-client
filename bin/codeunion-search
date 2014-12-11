@@ -18,7 +18,7 @@ parser = OptionParser.new do |opts|
 
     separator ""
     separator "Options:"
-    on("--category   CATEGORY", "Display config variable NAME") do |name|
+    on("-c", "--category   CATEGORY", "Display config variable NAME") do |name|
       options[:category] = name
     end
 
