@@ -20,11 +20,10 @@ Commonly used command are:
 See 'codeunion feedback COMMAND --help' for more information on a specific command.
 
 Make sure you run `codeunion config --set` the following:
-  github.api_key          - Allows codeunion-client  to interact with Github as you. 
-                            See: https://help.github.com/articles/creating-an-access-token-for-command-line-use/
+  github.api_key      - Allows codeunion-client  to interact with Github as you. 
+                        See: https://help.github.com/articles/creating-an-access-token-for-command-line-use/
 
-  feedback.repository_url - The full URL of the github repository to send feedback requests to.
-
+  feedback.repository - The github repository to submit feedback requests in. (I.e. codeunion/feedback-requests-web-fundamentals)
 HELP
 
 top_level_parser = OptionParser.new do |opts|
@@ -79,13 +78,16 @@ if !command || !commands[command]
   puts top_level_parser
 else
   commands[command].order!
-
-  if ARGV.empty?
-    puts commands[command]
-    exit
-  end
-
-  options[:args] = ARGV
+  options[:input] = ARGV
+  begin
   CodeUnion::Command::Feedback.new(options).run
+  rescue CodeUnion::Command::InvalidInput => e
+    puts "Woops! Error(s) found!"
+    puts e.message
+    puts commands[command]
+  rescue CodeUnion::Command::MissingConfig => e
+    puts "Woops! You need to configure this command"
+    puts e.message
+  end
 end
 
