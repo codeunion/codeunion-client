@@ -32,7 +32,7 @@ module CodeUnion
     end
 
     def template
-      @template ||= Addressable::Template.new("{/endpoint*}{?params*}")
+      @template ||= Addressable::Template.new("{+endpoint}{?params*}")
     end
 
     def connection
@@ -42,5 +42,4 @@ module CodeUnion
       end
     end
   end
-
 end

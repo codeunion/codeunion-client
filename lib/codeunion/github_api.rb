@@ -7,8 +7,7 @@ module CodeUnion
     end
 
     def create_issue(title, content, repository)
-      org, repo = repository.split("/")
-      @http_client.post(["repos", org, repo, "issues"], {
+      @http_client.post("repos/#{repository}/issues", {
         "title" => title,
         "body" => content
       }, { "access_token" => @access_token })
