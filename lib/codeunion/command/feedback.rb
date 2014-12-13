@@ -8,10 +8,10 @@ module CodeUnion
 
       def run
         config = Config.load
-        token = config.get("github.api_key")
+        token = config.get("github.access_token")
         repository = config.get("feedback.repository")
         if !token || !repository
-          raise CodeUnion::Command::MissingConfig.new(["github.api_key", "feedback.repository"])
+          raise CodeUnion::Command::MissingConfig.new(["github.access_token", "feedback.repository"])
         end
         @feedback_request = FeedbackRequest.new(input, token, repository)
         ensure_valid_input!

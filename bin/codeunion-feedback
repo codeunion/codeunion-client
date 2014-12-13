@@ -20,7 +20,7 @@ Commonly used command are:
 See 'codeunion feedback COMMAND --help' for more information on a specific command.
 
 Make sure you run `codeunion config --set` the following:
-  github.api_key      - Allows codeunion-client  to interact with Github as you. 
+  github.access_token - Allows codeunion-client to interact with Github as you.
                         See: https://help.github.com/articles/creating-an-access-token-for-command-line-use/
 
   feedback.repository - The github repository to submit feedback requests in. (I.e. codeunion/feedback-requests-web-fundamentals)
