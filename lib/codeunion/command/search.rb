@@ -1,22 +1,26 @@
 require "codeunion/command/base"
 require "codeunion/api"
+require "codeunion/helpers/text"
 
 require "faraday"
 require "rainbow"
+require "io/console"
 
 module CodeUnion
   module Command
     # The built-in `codeunion search` command
     class Search < Base
+      include CodeUnion::Helpers::Text
+
       def run
         results_by_category.flat_map do |name, results|
           heading = Rainbow("#{name.capitalize}:").color(:red)
 
           results.inject([heading]) do |lines, result|
-            lines << indent(Rainbow(result["url"]).color(:green))
-            lines << indent("tags: ") + result["tags"].sort.join(", ")
-            lines << indent(result["description"])
-            lines << indent("")
+            lines << format_output(Rainbow(result["url"]).color(:green))
+            lines << format_output("tags: " + result["tags"].sort.join(", "))
+            lines << format_output(result["description"])
+            lines << format_output("")
           end
         end.join("\n")
       end
@@ -31,8 +35,11 @@ module CodeUnion
 
       private
 
-      def indent(str, level = 1)
-        ("  " * level) + str
+      def format_output(text)
+        rows, cols  = IO.console.winsize
+        line_length = [cols, 80].min
+
+        indent(wrap(text, line_length))
       end
 
       def api
