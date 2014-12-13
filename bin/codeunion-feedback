@@ -1,0 +1,93 @@
+#!/usr/bin/env ruby
+# encoding: UTF-8
+
+# Resolve the pathname for this executable
+require "pathname"
+bin_file = Pathname.new(__FILE__).realpath
+
+# Add the gem's "lib" directory to library path
+$LOAD_PATH.unshift File.expand_path("../../lib", bin_file)
+
+require "codeunion/command/feedback"
+require "optparse"
+
+options = {}
+commands = {}
+subtext = <<HELP
+Commonly used command are:
+  request URL - Sends a request for feedback to codeunion.
+
+See 'codeunion feedback COMMAND --help' for more information on a specific command.
+
+Make sure you run `codeunion config --set` the following:
+  github.access_token - Allows codeunion-client to interact with Github as you.
+                        See: https://help.github.com/articles/creating-an-access-token-for-command-line-use/
+
+  feedback.repository - The github repository to submit feedback requests in. (I.e. codeunion/feedback-requests-web-fundamentals)
+HELP
+
+top_level_parser = OptionParser.new do |opts|
+  opts.instance_exec do
+    self.banner = "Usage: codeunion feedback COMMAND"
+
+    separator ""
+    separator subtext
+
+
+    separator ""
+    separator "Global options:"
+    on_tail("-d", "--[no-]debug", "Adds debug output.") do |debug|
+      options[:debug] = debug
+    end
+
+    on_tail("-h", "--help", "Print this help message") do
+      puts self
+      exit
+    end
+  end
+end
+
+
+request_subtext = <<HELP
+URL should be a pull request or a specific commit.
+
+* How to get the URL for a commit: http://andrew.yurisich.com/work/2014/07/16/dont-link-that-line-number/
+* How to create a pull request: https://help.github.com/articles/creating-a-pull-request/
+HELP
+
+commands['request'] = OptionParser.new do |opts|
+  opts.instance_exec do
+    self.banner = "Usage: request URL"
+
+    separator ""
+    separator request_subtext
+
+    separator ""
+    separator "Options:"
+
+    on_tail("-h", "--help", "Print this help message") do
+      puts self
+      exit
+    end
+  end
+end
+
+top_level_parser.order!
+command = ARGV.shift
+if !command || !commands[command]
+  puts top_level_parser
+else
+  commands[command].order!
+  options[:input] = ARGV
+  begin
+  CodeUnion::Command::Feedback.new(options).run
+  rescue CodeUnion::Command::InvalidInput => e
+    puts "Woops! Error(s) found!"
+    puts e.message
+    puts commands[command]
+  rescue CodeUnion::Command::MissingConfig => e
+    puts "Woops! You need to configure this command"
+    puts e.message
+  end
+end
+

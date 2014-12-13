@@ -6,7 +6,7 @@ module CodeUnion
     DEFAULT_CONFIG_FILE = File.join(Dir.home, ".codeunion", "config")
 
     def self.load(config_file_path=DEFAULT_CONFIG_FILE)
-        CodeUnion::Config.new(FileAdapter.new(config_file_path))
+      CodeUnion::Config.new(FileAdapter.new(config_file_path))
     end
 
     def initialize(config_file)
