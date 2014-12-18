@@ -28,10 +28,11 @@ module CodeUnion
   end
 
   class FeedbackRequestTest < MiniTest::Test
+    DEFAULT_ARTIFACT = "http://example.com"
     def send_request(artifact_to_review, repository="", access_token="fake_token")
-     request = FeedbackRequest.new(artifact_to_review, access_token, repository, { github_api: FakeGithubAPI })
-     request.send!
-     request
+      request = FeedbackRequest.new(artifact_to_review, access_token, repository, { github_api: FakeGithubAPI })
+      request.send!
+      request
     end
 
     def assert_valid_artifact(artifact, msg="#{artifact} is an invalid artifact")
@@ -56,7 +57,7 @@ module CodeUnion
     end
 
     def test_sending_a_request_for_feedback
-      artifact_to_review = "http://google.com"
+      artifact_to_review = DEFAULT_ARTIFACT
       access_token = "fake-token"
       repository = "codeunion/web-fundamentals"
 
@@ -69,20 +70,43 @@ module CodeUnion
       assert_equal(FeedbackRequest::ISSUE_TITLE, FakeGithubAPI.last_request[:title])
     end
 
-    def test_repository_may_be_just_a_repo
-     repository = "web-fundamentals"
+    def test_repository_prepends_default_owner
+      repository = "web-fundamentals"
 
-     send_request("http://google.com", repository)
+      send_request(DEFAULT_ARTIFACT, repository)
 
-     assert_equal("codeunion/#{repository}", FakeGithubAPI.last_request[:repository])
-   end
+      assert_equal("#{FeedbackRequest::DEFAULT_OWNER}/#{repository}", FakeGithubAPI.last_request[:repository])
+    end
 
-   def test_repository_can_include_owner
-     repository = "zspencer/web-fundamentals"
+    def test_repository_can_include_owner
+      repository = "zspencer/web-fundamentals"
 
-     send_request("http://google.com", repository)
+      send_request(DEFAULT_ARTIFACT, repository)
 
-     assert_equal(repository, FakeGithubAPI.last_request[:repository])
-   end
- end
+      assert_equal(repository, FakeGithubAPI.last_request[:repository])
+    end
+
+    def test_repository_removes_preceding_forward_slash
+      repository = "zspencer/web-fundamentals"
+
+      send_request(DEFAULT_ARTIFACT, "/#{repository}")
+
+      assert_equal(repository, FakeGithubAPI.last_request[:repository])
+    end
+
+    def test_repository_can_be_github_web_url
+      repository = "codeunion/web-fundamentals"
+      send_request(DEFAULT_ARTIFACT, "https://github.com/#{repository}")
+
+      assert_equal(repository, FakeGithubAPI.last_request[:repository])
+    end
+
+    def test_repository_can_be_github_git_url
+      repository = "codeunion/web-fundamentals"
+
+      send_request(DEFAULT_ARTIFACT, "git://git@github.com:#{repository}.git")
+
+      assert_equal(repository, FakeGithubAPI.last_request[:repository])
+    end
+  end
 end
