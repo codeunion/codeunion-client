@@ -3,6 +3,7 @@ require 'codeunion/github_api'
 
 module CodeUnion
   class FeedbackRequest
+    DEFAULT_OWNER="codeunion"
     MISSING_ARTIFACT = "You must provide something to provide feedback on"
     INVALID_ARTIFACT = "The artifact provided was not a web URL. We only provide feedback on code hosted online."
 
@@ -13,7 +14,7 @@ module CodeUnion
     def initialize(artifact, github_token, feedback_repository, options = {})
       @github_api = options.fetch(:github_api, GithubAPI).new(github_token)
       @artifact = artifact
-      @feedback_repository = feedback_repository
+      self.feedback_repository = feedback_repository
     end
 
     def send!
@@ -35,6 +36,14 @@ module CodeUnion
     private
     def is_url?(url)
       url =~ /\A#{URI::regexp(['http', 'https'])}\z/
+    end
+
+    def feedback_repository=(feedback_repository)
+      if feedback_repository.split(/\//).length == 2
+        @feedback_repository = feedback_repository
+      else
+        @feedback_repository = "#{DEFAULT_OWNER}/#{feedback_repository}"
+      end
     end
   end
 end
