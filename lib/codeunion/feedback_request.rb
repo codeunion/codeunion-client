@@ -65,7 +65,7 @@ module CodeUnion
           clean_up(URI(@location).path)
         elsif @location =~ GIT_URL_REGEX
           match = @location.match(GIT_URL_REGEX)
-          match.captures[0].gsub(".git", "")
+          clean_up(match.captures[0])
         elsif has_owner?
           @location
         else
@@ -78,7 +78,7 @@ module CodeUnion
       end
 
       def clean_up(feedback_repository)
-        feedback_repository.gsub(/^\//,"")
+        feedback_repository.gsub(/^\//,"").gsub(".git","")
       end
     end
   end

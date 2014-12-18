@@ -101,6 +101,13 @@ module CodeUnion
       assert_equal(repository, FakeGithubAPI.last_request[:repository])
     end
 
+    def test_repository_can_be_github_web_url_with_dot_git
+      repository = "codeunion/web-fundamentals"
+      send_request(DEFAULT_ARTIFACT, "https://github.com/#{repository}.git")
+
+      assert_equal(repository, FakeGithubAPI.last_request[:repository])
+    end
+
     def test_repository_can_be_github_git_url
       repository = "codeunion/web-fundamentals"
 
