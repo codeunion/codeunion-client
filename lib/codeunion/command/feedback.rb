@@ -24,7 +24,7 @@ module CodeUnion
       end
 
       def ensure_valid_input!
-        raise CodeUnion::Command::InvalidInput.new(input_errors) unless @feedback_request.valid?
+        raise CodeUnion::Command::InvalidInput.new(@feedback_request.errors) unless @feedback_request.valid?
       end
     end
   end
