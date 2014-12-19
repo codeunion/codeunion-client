@@ -70,58 +70,48 @@ module CodeUnion
       assert_equal(FeedbackRequest::ISSUE_TITLE, FakeGithubAPI.last_request[:title])
     end
 
-    def test_repository_prepends_default_owner
-      repository = "web-fundamentals"
+    def assert_repository_becomes(expected_repository, input_value)
 
-      send_request(DEFAULT_ARTIFACT, repository)
+      send_request(DEFAULT_ARTIFACT, input_value)
 
-      assert_equal("#{FeedbackRequest::DEFAULT_OWNER}/#{repository}", FakeGithubAPI.last_request[:repository])
+      assert_equal(expected_repository, FakeGithubAPI.last_request[:repository])
     end
 
-    def test_repository_can_include_owner
-      repository = "zspencer/web-fundamentals"
+    def test_repository_prepends_default_owner
+      assert_repository_becomes("codeunion/web-fundamentals", "web-fundamentals")
+    end
 
-      send_request(DEFAULT_ARTIFACT, repository)
-
-      assert_equal(repository, FakeGithubAPI.last_request[:repository])
+    def test_repository_may_include_non_codeunion_owner
+      assert_repository_becomes("zspencer/web-fundamentals", "zspencer/web-fundamentals")
     end
 
     def test_repository_removes_preceding_forward_slash
-      repository = "zspencer/web-fundamentals"
-
-      send_request(DEFAULT_ARTIFACT, "/#{repository}")
-
-      assert_equal(repository, FakeGithubAPI.last_request[:repository])
+      assert_repository_becomes("zspencer/web-fundamentals", "/zspencer/web-fundamentals")
     end
 
     def test_repository_can_be_github_web_url
       repository = "codeunion/web-fundamentals"
-      send_request(DEFAULT_ARTIFACT, "https://github.com/#{repository}")
-
-      assert_equal(repository, FakeGithubAPI.last_request[:repository])
+      assert_repository_becomes(repository, "https://github.com/#{repository}")
     end
 
     def test_repository_can_be_github_web_url_with_dot_git
       repository = "codeunion/web-fundamentals"
-      send_request(DEFAULT_ARTIFACT, "https://github.com/#{repository}.git")
-
-      assert_equal(repository, FakeGithubAPI.last_request[:repository])
+      assert_repository_becomes(repository, "https://github.com/#{repository}.git")
     end
 
     def test_repository_can_be_github_git_url
       repository = "codeunion/web-fundamentals"
-
-      send_request(DEFAULT_ARTIFACT, "git://git@github.com:#{repository}.git")
-
-      assert_equal(repository, FakeGithubAPI.last_request[:repository])
+      assert_repository_becomes(repository, "git://git@github.com:#{repository}.git")
     end
 
     def test_repository_can_be_a_github_git_url_without_the_dot_git
       repository = "codeunion/web-fundamentals"
+      assert_repository_becomes(repository, "git://git@github.com:#{repository}")
+    end
 
-      send_request(DEFAULT_ARTIFACT, "git://git@github.com:#{repository}")
-
-      assert_equal(repository, FakeGithubAPI.last_request[:repository])
+    def test_repository_can_be_a_github_git_url_without_the_protocol
+      repository = "codeunion/web-fundamentals"
+      assert_repository_becomes(repository, "git@github.com:#{repository}.git")
     end
   end
 end

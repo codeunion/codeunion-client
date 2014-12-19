@@ -5,7 +5,9 @@ require 'addressable/uri'
 module CodeUnion
   class FeedbackRequest
     WEB_URL_REGEX = /\A#{URI::regexp(['http', 'https'])}\z/
-    GIT_URL_REGEX = /\Agit:\/\/git@github.com:(.*)(.git)?/
+
+    GIT_URL_REGEX = /\A(git:\/\/)?git@github.com:(.*)(.git)?\z/
+    REPO_CAPTURE_INDEX = 1
 
     DEFAULT_OWNER="codeunion"
     MISSING_ARTIFACT = "You must provide something to provide feedback on"
@@ -65,7 +67,7 @@ module CodeUnion
           clean_up(URI(@location).path)
         elsif @location =~ GIT_URL_REGEX
           match = @location.match(GIT_URL_REGEX)
-          clean_up(match.captures[0])
+          clean_up(match.captures[REPO_CAPTURE_INDEX])
         elsif has_owner?
           @location
         else
