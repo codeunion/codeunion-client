@@ -93,3 +93,9 @@ install-gems-20:
 install-gems-21:
 	$(21_env) $(install_bundler)
 	$(21_env) $(install_gems)
+
+lint:
+	bundle exec rubocop
+
+relint:
+	$(rerun) lint
