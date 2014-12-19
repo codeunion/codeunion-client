@@ -4,6 +4,7 @@ require "multi_json"
 require "addressable/template"
 
 module CodeUnion
+  # More friendly RESTful interactions via Faraday and Addressable
   class HTTPClient
     def initialize(api_host)
       @api_host = api_host
@@ -16,13 +17,13 @@ module CodeUnion
     def post(endpoint, body = {}, params = {})
       connection.post do |req|
         req.url request_url(endpoint, params)
-        req.headers['Content-Type'] = 'application/json'
+        req.headers["Content-Type"] = "application/json"
         req.body = body.to_json
       end.body
     end
 
     def request_url(endpoint, params = {})
-      expand_url(:endpoint => endpoint, :params => params)
+      expand_url({ :endpoint => endpoint, :params => params })
     end
 
     private
