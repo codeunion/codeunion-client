@@ -17,3 +17,6 @@ Style/HashSyntax:
 Style/StringLiterals:
   Enabled: true
   EnforcedStyle: double_quotes
+
+Metrics/LineLength:
+  Max: 120
