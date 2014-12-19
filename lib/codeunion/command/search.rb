@@ -36,7 +36,7 @@ module CodeUnion
       private
 
       def format_output(text)
-        rows, cols  = IO.console.winsize
+        _rows, cols  = IO.console.winsize
         line_length = [cols, 80].min
 
         indent(wrap(text, line_length))
