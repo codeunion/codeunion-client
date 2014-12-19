@@ -1,41 +1,44 @@
 lib_dir = File.join(File.dirname(File.expand_path(__FILE__)), "..", "..", "lib")
 $LOAD_PATH.unshift(lib_dir)
 
-require 'minitest/autorun'
-require 'codeunion/feedback_request'
-
+require "minitest/autorun"
+require "codeunion/feedback_request"
 
 module CodeUnion
+  # Fake version of the GithubAPI that acts as a spy
   class FakeGithubAPI
+    @requests = []
+    class << self
+      attr_reader :requests
+    end
+
     def initialize(access_token)
-      @@requests = []
       @access_token = access_token
     end
 
     def create_issue(title, content, repository)
-      @@requests.push({
-        type: :create_issue,
-        title: title,
-        content: content,
-        repository: repository,
-        token: @access_token
-      })
+      self.class.requests.push({ :type => :create_issue,
+                                 :title => title,
+                                 :content => content,
+                                 :repository => repository,
+                                 :token => @access_token })
     end
 
     def self.last_request
-      @@requests.last
+      @requests.last
     end
   end
 
+  # Ensures FeedbackRequest's interacts well with the GithubAPI
   class FeedbackRequestTest < MiniTest::Test
     DEFAULT_ARTIFACT = "http://example.com"
-    def send_request(artifact_to_review, repository="", access_token="fake_token")
-      request = FeedbackRequest.new(artifact_to_review, access_token, repository, { github_api: FakeGithubAPI })
+    def send_request(artifact_to_review, repository = "", access_token = "fake_token")
+      request = FeedbackRequest.new(artifact_to_review, access_token, repository, { :github_api => FakeGithubAPI })
       request.send!
       request
     end
 
-    def assert_valid_artifact(artifact, msg="#{artifact} is an invalid artifact")
+    def assert_valid_artifact(artifact, msg = "#{artifact} is an invalid artifact")
       request = send_request(artifact)
       assert request.valid?, msg
     end
@@ -45,7 +48,7 @@ module CodeUnion
       assert_valid_artifact("https://foo.com")
     end
 
-    def refute_valid_artifact(artifact, msg="#{artifact} is a valid artifact")
+    def refute_valid_artifact(artifact, msg = "#{artifact} is a valid artifact")
       request = send_request(artifact)
       refute request.valid?, msg
     end
@@ -71,7 +74,6 @@ module CodeUnion
     end
 
     def assert_repository_becomes(expected_repository, input_value)
-
       send_request(DEFAULT_ARTIFACT, input_value)
 
       assert_equal(expected_repository, FakeGithubAPI.last_request[:repository])
