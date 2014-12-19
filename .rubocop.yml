@@ -29,6 +29,9 @@ Style/StringLiterals:
   Enabled: true
   EnforcedStyle: double_quotes
 
+Style/StringLiteralsInInterpolation:
+  Enabled: false
+
 Style/MethodCallParentheses:
   Enabled: false
 
