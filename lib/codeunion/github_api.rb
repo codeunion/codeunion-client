@@ -1,5 +1,8 @@
-require 'codeunion/http_client'
+require "codeunion/http_client"
+
 module CodeUnion
+  # Intent-revealing methods for interacting with Github with interfaces
+  # that aren't tied to the api calls.
   class GithubAPI
     def initialize(access_token)
       @access_token = access_token

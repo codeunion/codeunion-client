@@ -1,11 +1,11 @@
 require "yaml"
 
 module CodeUnion
-  # A class to manage CodeUnion configuration data
+  # Manages CodeUnion configuration data
   class Config
     DEFAULT_CONFIG_FILE = File.join(Dir.home, ".codeunion", "config")
 
-    def self.load(config_file_path=DEFAULT_CONFIG_FILE)
+    def self.load(config_file_path = DEFAULT_CONFIG_FILE)
       CodeUnion::Config.new(FileAdapter.new(config_file_path))
     end
 
@@ -46,7 +46,7 @@ module CodeUnion
 
       key, sub_key = extract_subkey(dotted_key)
 
-      config.merge(key => set_dotted(config[key], sub_key, value))
+      config.merge({ key => set_dotted(config[key], sub_key, value) })
     end
 
     def unset_dotted(config, dotted_key)
@@ -73,13 +73,13 @@ module CodeUnion
       dotted_key.split(".", 2)
     end
 
+    # Reads and writes YAML to the FileSystem
     class FileAdapter
       attr_reader :file_path
 
       def initialize(file_path)
         @file_path = file_path
       end
-
 
       def write(data)
         ensure_exists!
@@ -94,7 +94,6 @@ module CodeUnion
       alias_method :to_h, :to_hash
 
       private
-
 
       def write_fearlessly(data)
         File.open(file_path, "w") do |f|

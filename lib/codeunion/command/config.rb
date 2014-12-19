@@ -6,7 +6,6 @@ module CodeUnion
   module Command
     # The built-in `codeunion config` command
     class Config < Base
-
       def run
         edit_config do
           if options[:get]
@@ -17,7 +16,7 @@ module CodeUnion
             config.unset(options[:unset])
           end
         end
-        return nil
+        nil
       end
 
       private

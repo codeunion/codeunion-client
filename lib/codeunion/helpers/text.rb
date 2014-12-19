@@ -3,21 +3,22 @@ require "io/console"
 
 module CodeUnion
   module Helpers
+    # Formats text for presenting to a  console
     module Text
-      def wrap(text, max_width = IO.console.winsize.last, indent = 0)
+      def wrap(text, max_width = IO.console.winsize.last)
         return "" if text.empty?
 
         words = text.split(/\s+/)
         output = words.shift
         chars_left = max_width - output.length
 
-        words.inject(output) do |output, word|
+        words.inject(output) do |output_builder, word|
           if word.length + 1 > chars_left
             chars_left = max_width - word.length
-            output << "\n" + word
+            output_builder << "\n" + word
           else
             chars_left -= word.length + 1
-            output << " " + word
+            output_builder << " " + word
           end
         end
       end
