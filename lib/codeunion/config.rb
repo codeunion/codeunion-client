@@ -11,7 +11,7 @@ module CodeUnion
 
     def initialize(config_file)
       @file = config_file
-      @config = Hash(config_file)
+      @config = Hash.try_convert(config_file)
       @config.default_proc = proc { |h, k| h[k] = {} }
     end
 
@@ -97,7 +97,7 @@ module CodeUnion
 
       def write_fearlessly(data)
         File.open(file_path, "w") do |f|
-          f.write YAML.dump(Hash(data))
+          f.write YAML.dump(Hash.try_convert(data))
         end
       end
 

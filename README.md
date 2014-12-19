@@ -33,3 +33,16 @@ $ codeunion waffles
 the CodeUnion tool would look for an executable named `codeunion-waffles`.  If
 the executable exists, the tool will run it.  If it doesn't exist, we would see
 a `CommandNotFound` error.
+
+## Development
+
+The CodeUnion client targets Ruby 1.9.3, 2.0, and 2.1. Assuming you have
+[homebrew](http://brew.sh) installed already:
+
+```
+make install      # Installs npm, wach, rbenv, ruby-build and ruby 1.9.3, 2.0
+                  # and 2.1
+make unit-test    # Runs the unit tests against all ruby versions. Thread-safe.
+make feature-test # Runs the feature tests against all ruby versions. Not-thread-safe.
+make test         # Runs unit and feature tests against all ruby versions
+```
