@@ -50,7 +50,7 @@ module CodeUnion
       end
 
       def initialize(location)
-        @location = clean_up(location)
+        @location = CLEAN.call(location)
       end
 
       def to_s
@@ -58,29 +58,25 @@ module CodeUnion
       end
 
       private
-      def has_owner?
-        @location.split(/\//).length == 2
-      end
-
+      CLEAN = ->(location) { location.gsub(/^\//,"").gsub(".git","") }
+      EXTRACTORS = [
+        { :match => ->(location) { location =~ GIT_URL_REGEX },
+          :extract => ->(location) {
+            match = location.match(GIT_URL_REGEX)
+            CLEAN.call(match.captures[REPO_CAPTURE_INDEX]) } },
+        { :match => ->(location) { location =~ WEB_URL_REGEX },
+          :extract => ->(location) { CLEAN.call(URI(location).path) } },
+        { :match => ->(location) { location.split(/\//).length == 2 },
+          :extract => ->(location) { location } },
+        { :match => ->(location) { true },
+          :extract => ->(location) { "#{DEFAULT_OWNER}/#{location}" } }
+      ]
       def extract_owner_and_repo
-        if @location =~ WEB_URL_REGEX
-          clean_up(URI(@location).path)
-        elsif @location =~ GIT_URL_REGEX
-          match = @location.match(GIT_URL_REGEX)
-          clean_up(match.captures[REPO_CAPTURE_INDEX])
-        elsif has_owner?
-          @location
-        else
-          prepend_default_owner
+        EXTRACTORS.each do |extractor|
+          if extractor[:match].call(@location)
+            return extractor[:extract].call(@location)
+          end
         end
-      end
-
-      def prepend_default_owner
-        "#{DEFAULT_OWNER}/#{@location}"
-      end
-
-      def clean_up(feedback_repository)
-        feedback_repository.gsub(/^\//,"").gsub(".git","")
       end
     end
   end
