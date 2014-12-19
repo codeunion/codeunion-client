@@ -22,6 +22,9 @@ Style/BracesAroundHashParameters:
    EnforcedStyle: braces
 
 
+Style/WordArray:
+  Enabled: false
+
 Style/StringLiterals:
   Enabled: true
   EnforcedStyle: double_quotes
