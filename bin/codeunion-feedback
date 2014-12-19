@@ -23,7 +23,8 @@ Make sure you run `codeunion config --set` the following:
   github.access_token - Allows codeunion-client to interact with Github as you.
                         See: https://help.github.com/articles/creating-an-access-token-for-command-line-use/
 
-  feedback.repository - The github repository to submit feedback requests in. (I.e. codeunion/feedback-requests-web-fundamentals)
+  feedback.repository - The github repository to submit feedback requests in.
+                        (I.e. codeunion/feedback-requests-web-fundamentals)
 HELP
 
 top_level_parser = OptionParser.new do |opts|
@@ -32,7 +33,6 @@ top_level_parser = OptionParser.new do |opts|
 
     separator ""
     separator subtext
-
 
     separator ""
     separator "Global options:"
@@ -47,7 +47,6 @@ top_level_parser = OptionParser.new do |opts|
   end
 end
 
-
 request_subtext = <<HELP
 URL should be a pull request or a specific commit.
 
@@ -55,7 +54,7 @@ URL should be a pull request or a specific commit.
 * How to create a pull request: https://help.github.com/articles/creating-a-pull-request/
 HELP
 
-commands['request'] = OptionParser.new do |opts|
+commands["request"] = OptionParser.new do |opts|
   opts.instance_exec do
     self.banner = "Usage: request URL"
 
@@ -80,7 +79,7 @@ else
   commands[command].order!
   options[:input] = ARGV
   begin
-  CodeUnion::Command::Feedback.new(options).run
+    CodeUnion::Command::Feedback.new(options).run
   rescue CodeUnion::Command::InvalidInput => e
     puts "Woops! Error(s) found!"
     puts e.message
@@ -90,4 +89,3 @@ else
     puts e.message
   end
 end
-
