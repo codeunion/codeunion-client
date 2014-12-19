@@ -22,6 +22,9 @@ Style/StringLiterals:
   Enabled: true
   EnforcedStyle: double_quotes
 
+Style/MethodCallParentheses:
+  Enabled: false
+
 Metrics/LineLength:
   Max: 120
 
