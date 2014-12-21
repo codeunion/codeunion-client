@@ -3,7 +3,7 @@ require "minitest/autorun"
 # Verify setting, getting, and unsetting config values end to end.
 class TestCodunionConfigFeature < MiniTest::Test
   def config(option)
-    `bin/codeunion-config --#{option}`
+    `bin/codeunion config --#{option}`
   end
 
   def test_setting_a_value
