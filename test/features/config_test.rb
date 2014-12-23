@@ -16,8 +16,12 @@ class TestCodunionConfigFeature < MiniTest::Test
 
   def test_unsetting_a_value
     config("set test.value 'new_value'")
+    config("set test.other 'brother'")
     config("unset test.value")
     actual = config("get test.value").strip()
     assert_equal "", actual
+
+    actual = config("get test.other").strip()
+    assert_equal "brother", actual
   end
 end
