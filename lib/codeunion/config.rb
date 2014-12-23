@@ -57,6 +57,7 @@ module CodeUnion
       else
         config.delete(key)
       end
+      config
     end
 
     def get_dotted(config, dotted_key)
