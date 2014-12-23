@@ -1,6 +1,7 @@
 require "codeunion/command/base"
 require "codeunion/api"
 require "codeunion/helpers/text"
+require "codeunion/search"
 
 require "faraday"
 require "rainbow"
@@ -17,9 +18,7 @@ module CodeUnion
           heading = Rainbow("#{name.capitalize}:").color(:red)
 
           results.inject([heading]) do |lines, result|
-            lines << format_output(Rainbow(result["url"]).color(:green))
-            lines << format_output("tags: " + result["tags"].sort.join(", "))
-            lines << format_output(result["description"])
+            lines.push(CodeUnion::Search::ResultPresenter.new(result).to_s)
             lines << format_output("")
           end
         end.join("\n")
@@ -30,17 +29,10 @@ module CodeUnion
       end
 
       def results
-        api.search(options)
+        @results ||= api.search(options)
       end
 
       private
-
-      def format_output(text)
-        _rows, cols  = IO.console.winsize
-        line_length = [cols, 80].min
-
-        indent(wrap(text, line_length))
-      end
 
       def api
         @api ||= CodeUnion::API.new("api.codeunion.io", "v1")
