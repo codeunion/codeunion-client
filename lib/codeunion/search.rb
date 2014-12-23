@@ -26,7 +26,7 @@ module CodeUnion
 
       def excerpt
         "excerpt: " + @result["excerpt"].gsub(EXCERPT_REGEX) do
-          query_term = $1
+          query_term = Regexp.last_match[1]
           Rainbow(query_term).color(:blue)
         end + "..."
       end
