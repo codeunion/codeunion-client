@@ -12,22 +12,25 @@ require "codeunion/command/config"
 require "optparse"
 
 options = {}
+subtext = <<HELP
+Commands are:
+  get NAME       - Retrieves and prints the named configuration value.
+  set NAME VALUE - Sets the named configuration to the given value.
+  unset NAME     - Removes the named configuration value.
+
+See 'codeunion config COMMAND --help' for more information on a specific command.
+HELP
 parser = OptionParser.new do |opts|
   opts.instance_exec do
-    self.banner = "Usage: codeunion config [options]"
-
+    self.banner = "Usage: codeunion config COMMAND"
     separator ""
-    separator "Options:"
-    on("--get   NAME", "Display config variable NAME") do |name|
-      options[:get] = name
-    end
 
-    on("--set   NAME VALUE", "Set config variable NAME to VALUE") do |name|
-      options[:set] = [name, default_argv.shift]
-    end
+    separator subtext
+    separator ""
 
-    on("--unset NAME", "Unset config variable NAME") do |name|
-      options[:unset] = name
+    separator "Global options:"
+    on_tail("-d", "--[no-]debug", "Adds debug output.") do |debug|
+      options[:debug] = debug
     end
 
     on_tail("-h", "--help", "Print this help message") do
@@ -37,12 +40,78 @@ parser = OptionParser.new do |opts|
   end
 end
 
-if ARGV.empty?
+commands = {}
+get_subtext = <<HELP
+Displays config variable NAME.  NAME may be a top-level key (i.e.  'codeunion')
+or nested, (i.e.  'codeunion.slack.username')
+HELP
+commands["get"] = OptionParser.new do |opts|
+  opts.instance_exec do
+    self.banner = "Usage: codeunion config get NAME"
+
+    separator ""
+    separator get_subtext
+    separator ""
+
+    separator "Options:"
+    on_tail("-h", "--help", "Print this help message") do
+      puts self
+      exit
+    end
+  end
+end
+
+set_subtext = <<HELP
+Sets config variable NAME to VALUE. NAME may be a top-level key (i.e.  'codeunion')
+or nested, (i.e.  'codeunion.slack.username').
+HELP
+
+commands["set"] = OptionParser.new do |opts|
+  opts.instance_exec do
+    self.banner = "Usage: codeunion config set NAME VALUE"
+
+    separator ""
+    separator set_subtext
+    separator ""
+
+    separator "Options:"
+    on_tail("-h", "--help", "Print this help message") do
+      puts self
+      exit
+    end
+  end
+end
+
+unset_subtext = <<HELP
+Unsets config variable NAME. NAME may be a top-level key (i.e.  'codeunion') or
+nested, (i.e.  'codeunion.slack.username').
+HELP
+commands["unset"] = OptionParser.new do |opts|
+  opts.instance_exec do
+    self.banner = "Usage: codeunion config unset NAME"
+
+    separator ""
+    separator unset_subtext
+    separator ""
+
+    separator "Options:"
+    on_tail("-h", "--help", "Print this help message") do
+      puts self
+      exit
+    end
+  end
+end
+
+parser.order!
+command = ARGV.shift
+if !command || !commands[command]
   puts parser
   exit
 else
-  parser.parse!(ARGV)
+  commands[command].order!
+  options[:command] = command
+  options[:input] = ARGV
+  result = CodeUnion::Command::Config.new(options).run
+  puts result if result
 end
 
-result = CodeUnion::Command::Config.new(options).run
-puts result if result

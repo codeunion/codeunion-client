@@ -8,12 +8,12 @@ module CodeUnion
     class Config < Base
       def run
         edit_config do
-          if options[:get]
-            return config.get(options[:get])
-          elsif options[:set]
-            config.set(*options[:set])
-          elsif options[:unset]
-            config.unset(options[:unset])
+          if options[:command] == "get"
+            return config.get(options[:input].join(""))
+          elsif options[:command] == "set"
+            config.set(*options[:input])
+          elsif options[:command] == "unset"
+            config.unset(options[:input].join(""))
           end
         end
         nil
