@@ -1,6 +1,7 @@
 AllCops:
   Exclude:
     - '*.gemspec'
+    - 'test/fixtures/**/*.rb'
 
 Style/Documentation:
   Exclude:

@@ -5,6 +5,13 @@ module CodeUnion
   module Helpers
     # Formats text for presenting to a  console
     module Text
+      def format_output(text)
+        _rows, cols  = IO.console.winsize
+        line_length = [cols, 80].min
+
+        indent(wrap(text, line_length))
+      end
+
       def wrap(text, max_width = IO.console.winsize.last)
         return "" if text.empty?
 
