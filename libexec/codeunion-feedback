@@ -73,19 +73,24 @@ end
 
 top_level_parser.order!
 command = ARGV.shift
-if !command || !commands[command]
+if !command
   puts top_level_parser
+  exit
+end
+if command && !commands[command]
+  options[:input] = [command]
+  command = "request"
 else
   commands[command].order!
   options[:input] = ARGV
-  begin
-    CodeUnion::Command::Feedback.new(options).run
-  rescue CodeUnion::Command::InvalidInput => e
-    puts "Woops! Error(s) found!"
-    puts e.message
-    puts commands[command]
-  rescue CodeUnion::Command::MissingConfig => e
-    puts "Woops! You need to configure this command"
-    puts e.message
-  end
+end
+begin
+  CodeUnion::Command::Feedback.new(options).run
+rescue CodeUnion::Command::InvalidInput => e
+  puts "Woops! Error(s) found!"
+  puts e.message
+  puts commands[command]
+rescue CodeUnion::Command::MissingConfig => e
+  puts "Woops! You need to configure this command"
+  puts e.message
 end
