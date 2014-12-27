@@ -8,6 +8,9 @@ bin_file = Pathname.new(__FILE__).realpath
 # Add the gem's "lib" directory to library path
 $LOAD_PATH.unshift File.expand_path("../../lib", bin_file)
 
+# Add our gem-specific "libexec" directory to the PATH
+ENV["PATH"] += ":" + File.expand_path("../../libexec", bin_file)
+
 require "codeunion/command/main"
 
 options = {
