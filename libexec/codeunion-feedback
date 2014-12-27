@@ -15,7 +15,7 @@ options = {}
 commands = {}
 subtext = <<HELP
 Commonly used command are:
-  request URL - Sends a request for feedback to codeunion.
+  request URL - (Default) - Sends a request for feedback to codeunion.
 
 See 'codeunion feedback COMMAND --help' for more information on a specific command.
 
