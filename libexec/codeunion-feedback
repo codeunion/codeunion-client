@@ -73,10 +73,12 @@ end
 
 top_level_parser.order!
 command = ARGV.shift
-if !command
+
+unless command
   puts top_level_parser
   exit
 end
+
 if command && !commands[command]
   options[:input] = [command]
   command = "request"
