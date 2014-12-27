@@ -56,7 +56,7 @@ HELP
 
 commands["request"] = OptionParser.new do |opts|
   opts.instance_exec do
-    self.banner = "Usage: request URL"
+    self.banner = "Usage: codeunion feedback request URL"
 
     separator ""
     separator request_subtext
