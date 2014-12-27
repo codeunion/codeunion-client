@@ -7,12 +7,18 @@ module CodeUnion
     # "View" in Traditional MVC for the Feedback command. Validates Input
     # and Builds response
     class Feedback < Base
+      CREATE_ACCESS_TOKEN_URL =
+        "https://help.github.com/articles/creating-an-access-token-for-command-line-use/"
+
       def run
         config = Config.load
         token = config.get("github.access_token")
         repository = config.get("feedback.repository")
-        if !token || !repository
-          fail(CodeUnion::Command::MissingConfig, ["github.access_token", "feedback.repository"])
+        if !token
+          fail(CodeUnion::Command::MissingConfig, { :name => "github.access_token",
+                                                    :help => "See: #{CREATE_ACCESS_TOKEN_URL }" })
+        elsif !repository
+          fail(CodeUnion::Command::MissingConfig, { :name => "feedback.repository" })
         end
         @feedback_request = FeedbackRequest.new(input, token, repository)
         ensure_valid_input!
