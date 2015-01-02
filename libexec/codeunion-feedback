@@ -19,7 +19,7 @@ Commonly used command are:
 
 See 'codeunion feedback COMMAND --help' for more information on a specific command.
 
-Make sure you run `codeunion config --set` the following:
+Make sure you `codeunion config set` the following:
   github.access_token - Allows codeunion-client to interact with Github as you.
                         See: https://help.github.com/articles/creating-an-access-token-for-command-line-use/
 
