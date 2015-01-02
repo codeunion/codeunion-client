@@ -15,11 +15,19 @@ module CodeUnion
     end
 
     def post(endpoint, body = {}, params = {})
-      connection.post do |req|
+      response = connection.post do |req|
         req.url request_url(endpoint, params)
         req.headers["Content-Type"] = "application/json"
         req.body = body.to_json
-      end.body
+      end
+
+      unless (200..300).cover?(response.status)
+        message = "POST to #{request_url(endpoint, params)} with " +
+                  "#{body} responded with #{response.status} and " +
+                  "#{response.body}"
+        fail(HTTPClient::RequestError, message)
+      end
+      response.body
     end
 
     def request_url(endpoint, params = {})
@@ -42,5 +50,6 @@ module CodeUnion
         conn.adapter Faraday.default_adapter
       end
     end
+    class RequestError < StandardError; end
   end
 end
