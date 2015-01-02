@@ -15,7 +15,7 @@ options = {}
 commands = {}
 subtext = <<HELP
 Commonly used command are:
-  request URL - Sends a request for feedback to codeunion.
+  request URL - (Default) - Sends a request for feedback to codeunion.
 
 See 'codeunion feedback COMMAND --help' for more information on a specific command.
 
@@ -56,7 +56,7 @@ HELP
 
 commands["request"] = OptionParser.new do |opts|
   opts.instance_exec do
-    self.banner = "Usage: request URL"
+    self.banner = "Usage: codeunion feedback request URL"
 
     separator ""
     separator request_subtext
@@ -73,19 +73,26 @@ end
 
 top_level_parser.order!
 command = ARGV.shift
-if !command || !commands[command]
+
+unless command
   puts top_level_parser
+  exit
+end
+
+if command && !commands[command]
+  options[:input] = [command]
+  command = "request"
 else
   commands[command].order!
   options[:input] = ARGV
-  begin
-    CodeUnion::Command::Feedback.new(options).run
-  rescue CodeUnion::Command::InvalidInput => e
-    puts "Woops! Error(s) found!"
-    puts e.message
-    puts commands[command]
-  rescue CodeUnion::Command::MissingConfig => e
-    puts "Woops! You need to configure this command"
-    puts e.message
-  end
+end
+begin
+  CodeUnion::Command::Feedback.new(options).run
+rescue CodeUnion::Command::InvalidInput => e
+  puts "Woops! Error(s) found!"
+  puts e.message
+  puts commands[command]
+rescue CodeUnion::Command::MissingConfig => e
+  puts "Woops! You need to configure this command"
+  puts e.message
 end
