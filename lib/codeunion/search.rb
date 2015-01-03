@@ -13,19 +13,27 @@ module CodeUnion
       end
 
       def to_s
-        [:description, :url, :tags, :excerpt].map do |attribute|
+        [:name, :description, :url, :tags, :excerpt].map do |attribute|
           format_output(send(attribute))
         end.join("\n")
       end
 
       private
 
+      def name
+        "#{category}: " + Rainbow(@result["name"]).color(:blue)
+      end
+
+      def category
+        Rainbow(@result["category"].gsub(/s$/, "").capitalize).color(:red)
+      end
+
       def description
         Rainbow(@result["description"]).color(:yellow)
       end
 
       def excerpt
-        "excerpt: " + @result["excerpt"].gsub(EXCERPT_REGEX) do
+        "Excerpt: " + @result["excerpt"].gsub(EXCERPT_REGEX) do
           query_term = Regexp.last_match[1]
           Rainbow(query_term).color(:blue)
         end + "..."
