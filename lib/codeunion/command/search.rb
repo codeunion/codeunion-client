@@ -25,7 +25,7 @@ module CodeUnion
       end
 
       def results_by_category
-        results.group_by { |result| result["category"] }.sort
+        results.group_by { |result| result["category"] }
       end
 
       def results
