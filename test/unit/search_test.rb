@@ -41,6 +41,8 @@ module CodeUnion
       end
 
       def test_presenter_highlights
+        assert_highlights("Example", :red, results[0])
+        assert_highlights("linkedout-example", :blue, results[0])
         assert_highlights("api", :blue, results[0])
         assert_highlights(results[0]["url"], :green, results[0])
         assert_highlights(results[0]["description"], :yellow, results[0])

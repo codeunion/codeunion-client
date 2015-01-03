@@ -14,18 +14,10 @@ module CodeUnion
       include CodeUnion::Helpers::Text
 
       def run
-        results_by_category.flat_map do |name, results|
-          heading = Rainbow("#{name.capitalize}:").color(:red)
-
-          results.inject([heading]) do |lines, result|
-            lines.push(CodeUnion::Search::ResultPresenter.new(result).to_s)
-            lines << format_output("")
-          end
+        results.inject([]) do |lines, result|
+          lines.push(CodeUnion::Search::ResultPresenter.new(result).to_s)
+          lines << format_output("")
         end.join("\n")
-      end
-
-      def results_by_category
-        results.group_by { |result| result["category"] }
       end
 
       def results
