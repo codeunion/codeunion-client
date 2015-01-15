@@ -23,9 +23,18 @@ end
 require "codeunion/command/main"
 require "optparse"
 
+description = <<HELP
+The CodeUnion command-line tool is meant to be used in conjunction with CodeUnion's curriculum.
+
+Think of it as your "learning sherpa."
+HELP
+
 parser = OptionParser.new do |opts|
   opts.instance_exec do
     self.banner = "Usage: codeunion <command>"
+
+    separator ""
+    separator description
 
     separator ""
     separator "Commands:"
