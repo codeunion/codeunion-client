@@ -9,7 +9,16 @@ bin_file = Pathname.new(__FILE__).realpath
 $LOAD_PATH.unshift File.expand_path("../../lib", bin_file)
 
 # Add our gem-specific "libexec" directory to the PATH
-ENV["PATH"] += ":" + File.expand_path("../../libexec", bin_file)
+subcmd_dir = File.expand_path("../../libexec", bin_file)
+ENV["PATH"] += ":" + subcmd_dir
+
+# Find all available subcommands
+subcmd_prefix = "codeunion-"
+subcmd_files  = Pathname.glob(File.join(subcmd_dir, subcmd_prefix + "*"))
+
+SUBCOMMANDS = subcmd_files.map do |path|
+  path.basename.to_s[/#{subcmd_prefix}(.+)/, 1]
+end
 
 require "codeunion/command/main"
 require "optparse"
@@ -17,6 +26,13 @@ require "optparse"
 parser = OptionParser.new do |opts|
   opts.instance_exec do
     self.banner = "Usage: codeunion <command>"
+
+    separator ""
+    separator "Commands:"
+    separator SUBCOMMANDS.map { |subcmd| summary_indent + subcmd }
+
+    separator ""
+    separator "Options:"
 
     on_tail("-h", "--help", "Print this help message") do
       puts self
