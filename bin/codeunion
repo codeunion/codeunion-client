@@ -12,6 +12,25 @@ $LOAD_PATH.unshift File.expand_path("../../lib", bin_file)
 ENV["PATH"] += ":" + File.expand_path("../../libexec", bin_file)
 
 require "codeunion/command/main"
+require "optparse"
+
+parser = OptionParser.new do |opts|
+  opts.instance_exec do
+    self.banner = "Usage: codeunion <command>"
+
+    on_tail("-h", "--help", "Print this help message") do
+      puts self
+      exit
+    end
+  end
+end
+
+parser.order!
+
+if ARGV.empty?
+  puts parser
+  exit
+end
 
 options = {
   :command_name => ARGV.first,
