@@ -21,18 +21,98 @@ $ rbenv rehash
 after you install the gem.  This is required for rbenv to pick up any new
 executables installed by a gem, including ours.
 
-## Subcommands
+## Getting Started
 
-The command-line tool is organized into subcommands, a la git.  If we were to
-run this command, for example
+Once you've installed the gem, you will be able to run the `codeunion` command:
 
 ```shell-session
-$ codeunion waffles
+$ codeunion
 ```
 
-the CodeUnion tool would look for an executable named `codeunion-waffles`.  If
-the executable exists, the tool will run it.  If it doesn't exist, we would see
-a `CommandNotFound` error.
+To run a particular subcommand, add it to the `codeunion` base command. For example, to use the search command you would run:
+
+```shell-session
+$ codeunion search [your search query]
+```
+
+You can see a help window for any subcommand by appending a `-h` or `--help` flag:
+
+```shell-session
+$ codeunion search -h
+Usage: codeunion search [options] <terms>
+
+Options:
+-c, --category   CATEGORY        Display config variable NAME
+-h, --help                       Print this help message
+```
+
+## Subcommands
+
+#### Config
+
+Read and write configuration for the CodeUnion command-line tool.
+
+Example usage:
+
+```shell-session
+# Set the feedback.repository value
+$ codeunion config feedback.repository codeunion/feedback-requests-web-fundamentals
+
+# Get the feedback.repository value
+$ codeunion config feedback.repository
+codeunion/feedback-requests-web-fundamentals
+```
+
+#### Feedback
+
+Request feedback on your code.
+
+Feedback requests require a URL for a _specific commit_ or a _pull request_.
+
+Example usage:
+
+```shell-session
+$ codeunion feedback request https://github.com/codeunion/overheard-server/commit/0edb7866809620013d4a3c2d3b5bea57b12bf255
+```
+
+Run `codeunion feedback -h` for more information.
+
+#### Search
+
+Search the repositories in the CodeUnion curriculum.
+
+Example usage:
+
+```shell-session
+$ codeunion search html
+  Project: social-wall
+  Your First Web Application
+  https://github.com/codeunion/social-wall
+  tags:
+  Excerpt: HTML templating and ERB - Deploying an application to Heroku
+  The following video tutorials are all based...
+
+  [...]
+```
+
+You can narrow your searches by category with the `--category` flag.
+
+
+```shell-session
+$ codeunion search html --category example
+```
+
+Or you can use the alias commands to narrow your search to either `projects` or `examples`.
+
+```shell-session
+$ codeunion examples html
+```
+
+...and...
+
+```shell-session
+$ codeunion projects html
+```
 
 ## Development
 
@@ -46,3 +126,16 @@ make unit-test    # Runs the unit tests against all ruby versions. Thread-safe.
 make feature-test # Runs the feature tests against all ruby versions. Not-thread-safe.
 make test         # Runs unit and feature tests against all ruby versions
 ```
+
+### How Subcommands Work
+
+The command-line tool is organized into subcommands, a la git.  If we were to
+run this command, for example
+
+```shell-session
+$ codeunion waffles
+```
+
+the CodeUnion tool would look for an executable named `codeunion-waffles`.  If
+the executable exists, the tool will run it.  If it doesn't exist, we would see
+a `CommandNotFound` error.
