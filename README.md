@@ -46,6 +46,74 @@ Options:
 -h, --help                       Print this help message
 ```
 
+## Subcommands
+
+#### Config
+
+Read and write configuration for the CodeUnion command-line tool.
+
+Example usage:
+
+```shell-session
+# Set the feedback.repository value
+$ codeunion config feedback.repository codeunion/feedback-requests-web-fundamentals
+
+# Get the feedback.repository value
+$ codeunion config feedback.repository
+codeunion/feedback-requests-web-fundamentals
+```
+
+#### Feedback
+
+Request feedback on your code.
+
+Feedback requests require a URL for a _specific commit_ or a _pull request_.
+
+Example usage:
+
+```shell-session
+$ codeunion feedback request https://github.com/codeunion/overheard-server/commit/0edb7866809620013d4a3c2d3b5bea57b12bf255
+```
+
+Run `codeunion feedback -h` for more information.
+
+#### Search
+
+Search the repositories in the CodeUnion curriculum.
+
+Example usage:
+
+```shell-session
+$ codeunion search html
+  Project: social-wall
+  Your First Web Application
+  https://github.com/codeunion/social-wall
+  tags:
+  Excerpt: HTML templating and ERB - Deploying an application to Heroku
+  The following video tutorials are all based...
+
+  [...]
+```
+
+You can narrow your searches by category with the `--category` flag.
+
+
+```shell-session
+$ codeunion search html --category example
+```
+
+Or you can use the alias commands to narrow your search to either `projects` or `examples`.
+
+```shell-session
+$ codeunion examples html
+```
+
+...and...
+
+```shell-session
+$ codeunion projects html
+```
+
 ## Development
 
 The CodeUnion client targets Ruby 1.9.3, 2.0, and 2.1. Assuming you have
