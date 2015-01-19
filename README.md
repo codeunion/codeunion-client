@@ -79,12 +79,12 @@ This will add an issue to the feedback repository specified in the config variab
 
 To use the feedback command, you will need to set the following configuration variables:
 
-**`github.access_token`**
+**`github.access_token`**<br>
 Allows the tool to interact with GitHub as you. See [this article](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) for more information.
 
 You can use the default OAuth scopes. As of this writing those are: `repo`, `public_repo`, `gist`, and `user`.
 
-**`feedback.repository`**
+**`feedback.repository`**<br>
 URL of the GitHub repository to submit feedback requests in. For example:  https://github.com/codeunion/feedback-requests-web-fundamentals
 
 If you don't know which repository to use, see your workshop's base repository or ask your instructor.
