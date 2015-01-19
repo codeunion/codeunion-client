@@ -75,7 +75,19 @@ Example usage:
 $ codeunion feedback request https://github.com/codeunion/overheard-server/commit/0edb7866809620013d4a3c2d3b5bea57b12bf255
 ```
 
-Run `codeunion feedback -h` for more information.
+This will add an issue to the feedback repository specified in the config variable `feedback.repository`.
+
+To use the feedback command, you will need to set the following configuration variables:
+
+**`github.access_token`**
+Allows the tool to interact with GitHub as you. See [this article](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) for more information.
+
+You can use the default OAuth scopes. As of this writing those are: `repo`, `public_repo`, `gist`, and `user`.
+
+**`feedback.repository`**
+URL of the GitHub repository to submit feedback requests in. For example:  https://github.com/codeunion/feedback-requests-web-fundamentals
+
+If you don't know which repository to use, see your workshop's base repository or ask your instructor.
 
 #### Search
 
