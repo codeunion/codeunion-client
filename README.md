@@ -56,10 +56,10 @@ Example usage:
 
 ```shell-session
 # Set the feedback.repository value
-$ codeunion config feedback.repository codeunion/feedback-requests-web-fundamentals
+$ codeunion config set feedback.repository codeunion/feedback-requests-web-fundamentals
 
 # Get the feedback.repository value
-$ codeunion config feedback.repository
+$ codeunion config get feedback.repository
 codeunion/feedback-requests-web-fundamentals
 ```
 
