@@ -108,5 +108,33 @@ module CodeUnion
         write_fearlessly({}) unless File.exist?(file_path)
       end
     end
+
+    # Builds a message for a missing config option
+    class MissingConfigMessage
+      # Given a field hash with a :name and optional :help_text, builds a nice string
+      # explaining the error.
+      #
+      # @param field [Hash]
+      def initialize(field)
+        @field = field
+      end
+
+      # Plain-old string
+      def to_s
+        "Run 'codeunion config set #{name} VALUE'#{help_text}"
+      end
+
+      private
+
+      attr_reader :field
+
+      def name
+        field[:name]
+      end
+
+      def help_text
+        field[:help] ? "\n#{field[:help]}" : ""
+      end
+    end
   end
 end

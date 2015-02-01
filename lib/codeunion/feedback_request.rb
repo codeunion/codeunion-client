@@ -36,7 +36,7 @@ module CodeUnion
       errors.push(MISSING_ARTIFACT) if artifact.empty?
       errors.push(INVALID_ARTIFACT) unless url?(artifact)
 
-      errors.join("\n")
+      errors
     end
 
     private

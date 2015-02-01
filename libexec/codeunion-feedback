@@ -8,6 +8,7 @@ bin_file = Pathname.new(__FILE__).realpath
 # Add the gem's "lib" directory to library path
 $LOAD_PATH.unshift File.expand_path("../../lib", bin_file)
 
+require "codeunion/cli"
 require "codeunion/command/feedback"
 require "optparse"
 
@@ -72,27 +73,20 @@ commands["request"] = OptionParser.new do |opts|
 end
 
 top_level_parser.order!
-command = ARGV.shift
+sub_command = ARGV.shift
 
-unless command
+unless sub_command
   puts top_level_parser
   exit
 end
 
-if command && !commands[command]
-  options[:input] = [command]
-  command = "request"
+if sub_command && !commands[sub_command]
+  options[:input] = [sub_command]
+  sub_command = "request"
 else
-  commands[command].order!
   options[:input] = ARGV
 end
-begin
-  CodeUnion::Command::Feedback.new(options).run
-rescue CodeUnion::Command::InvalidInput => e
-  puts "Woops! Error(s) found!"
-  puts e.message
-  puts commands[command]
-rescue CodeUnion::Command::MissingConfig => e
-  puts "Woops! You need to configure this command"
-  puts e.message
-end
+
+commands[sub_command].order!
+
+puts CodeUnion::CLI.new.run(CodeUnion::Command::Feedback, options)

@@ -8,6 +8,7 @@ bin_file = Pathname.new(__FILE__).realpath
 # Add the gem's "lib" directory to library path
 $LOAD_PATH.unshift File.expand_path("../../lib", bin_file)
 
+require "codeunion/cli"
 require "codeunion/command/config"
 require "optparse"
 
@@ -107,10 +108,10 @@ command = ARGV.shift
 if !command || !commands[command]
   puts parser
   exit
-else
-  commands[command].order!
-  options[:command] = command
-  options[:input] = ARGV
-  result = CodeUnion::Command::Config.new(options).run
-  puts result if result
 end
+
+commands[command].order!
+options[:command] = command
+options[:input] = ARGV
+
+puts CodeUnion::CLI.new.run(CodeUnion::Command::Config, options, parser)
