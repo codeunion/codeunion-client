@@ -14,7 +14,7 @@ module CodeUnion
         result << "Woops! Error(s) found!\n"
         result << command.errors.map { |e| "  #{e}" }.join("\n")
         result << "\n"
-        result << help_text
+        result << help_text.to_s
         return result
       end
       command.run
